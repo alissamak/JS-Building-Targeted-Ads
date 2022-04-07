@@ -1,20 +1,55 @@
 // get user's data
 // get user's coordinates
-
+async function userCoord(){
+    location = await new Promise((resolve, reject) => {
+        navigator.geolocation.getCurrentPosition(resolve, reject);
+    })
+    return [location.coords.latitude, location.coords.longitude]
+}
+console.log(userCoord());
 
 // get user's time
-
+function userTime(){
+    const now = new Date();
+    const nowHour = now.getHours();
+    return nowHour;
+}
+console.log(userTime())
 
 // helper functions
 // check time of day
-
+function usermealTime(){
+    const tod = userTime();
+    return tod > 20 ? 'late night snack' : tod > 16 ? 'dinner' : tod > 11 ? 'lunch' : 'brekfeast'
+}
+console.log(usermealTime());
 
 // build ads
 // build ad 1
-
+function buildAd1(){
+    const mealTime = usermealTime();
+    let content = document.querySelector('.ad1')
+    let inner = document.createElement('p')
+    inner.innerHTML = `We've got the best <span>${mealTime}</span> in town`
+    content.append(inner)
+}
+// buildAd1();
 
 // build ad 2
-
+function buildA2(coordinates){
+    const coords = coordinates;
+    const href = `https://www.google.com/maps/search/coffee/@${coords[0]},${coords[1]},15z/}`;
+    let content = document.querySelector('.ad2');
+    let inner = document.createElement('p');
+    inner.innerHTML = `It's time to try our cofee! <span><a href='${href}' target= '_blank'>We're this close!</span>`
+    content.append(inner)
+}
+// buildA2(userCoord());
 
 // event listeners
 // on load, build ads
+window.onload = async () => {
+    buildAd1();
+    const coords = await userCoord();
+    buildA2(coords);
+}
